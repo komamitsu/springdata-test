@@ -48,7 +48,8 @@ public class Main {
             for (Group group : groups) {
                 Group savedGroup = groupRepo.save(group);
                 for (int i = 0; i < 5; i++) {
-                    User savedUser = userRepo.save(User.create(group.getName() + "-" + i, 100 * i));
+                    String userName = String.format("user-%s-%d", group.getName(), i);
+                    User savedUser = User.create(userName, 100 * i);
                     group.addUser(savedUser);
                 }
                 groupRepo.save(savedGroup);

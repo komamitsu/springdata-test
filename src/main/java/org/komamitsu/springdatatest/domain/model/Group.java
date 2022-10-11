@@ -12,7 +12,7 @@ public class Group {
     @Id
     private final Long id;
     private final String name;
-    @MappedCollection(idColumn = "group_id", keyColumn = "group_id")
+    @MappedCollection(idColumn = "group_id", keyColumn = "id")
     private final List<User> users;
 
     private Group(Long id, String name, List<User> users) {
@@ -41,8 +41,6 @@ public class Group {
     }
 
     public void addUser(User user) {
-        System.out.println(this);
-        System.out.println(user);
         users.add(user);
     }
 
