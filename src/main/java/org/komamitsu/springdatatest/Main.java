@@ -49,9 +49,11 @@ public class Main {
             }
             groupRepo.saveAll(groups);
             System.out.println("Calling findByName(group-2)");
-            groupRepo.findByName("group-2", Pageable.ofSize(2)).forEach(g -> System.out.println(g));
+            Group secondGroup = groupRepo.findByName("group-2").get(0);
+            System.out.println(secondGroup);
+
             System.out.println("Calling findAll(Pageable.ofSize(2))");
-            groupRepo.findAll(Pageable.ofSize(2)).forEach(g -> System.out.println(g));
+            groupRepo.findAll(Pageable.ofSize(2)).forEach(System.out::println);
         };
     }
 

@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface GroupRepository extends PagingAndSortingRepository<Group, Long> {
-    List<Group> findByName(String name, Pageable pageable);
+    List<Group> findByName(String name);
 }
