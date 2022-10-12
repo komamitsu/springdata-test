@@ -22,17 +22,11 @@ public class HardcodedJdbcConfig {
 
     @Bean
     @Primary
-    public Dialect scalardbDialect() {
+    /* FIXME
+    Caused by: org.springframework.data.jdbc.repository.config.DialectResolver$NoDialectException: Cannot determine a dialect for org.springframework.jdbc.core.JdbcTemplate@3f6bf8aa. Please provide a Dialect.
+	        at org.springframework.data.jdbc.repository.config.DialectResolver.lambda$getDialect$2(DialectResolver.java:82) ~[spring-data-jdbc-2.4.3.jar:2.4.3]
+    */
+    public Dialect jdbcDialect() {
         return new ScalarDbDialect();
-    }
-
-    //    @Bean
-    public DataSource postgresqlDataSource() {
-        DataSourceBuilder<?> builder = DataSourceBuilder.create();
-        builder.driverClassName("org.postgresql.Driver");
-        builder.url("jdbc:postgresql://localhost/springdatatest");
-        builder.username("springdatauser");
-        builder.password("springdatapassword");
-        return builder.build();
     }
 }

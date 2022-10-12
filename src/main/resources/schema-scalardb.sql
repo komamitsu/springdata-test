@@ -1,3 +1,5 @@
-create table if not exists "group" (id bigserial primary key, name text not null);
--- create table if not exists "user" (id bigserial primary key, name text not null, group_id bigint references "group" (id) not null, point int not null);
-create table if not exists "user" (id bigserial primary key, name text not null, group_id bigint references "group" (id), point int not null);
+-- FIXME Scalar DB SQL doesn't support multiple statement execution
+create namespace if not exists "scldb_ns";
+-- create table if not exists "scldb_ns.group" (id bigint primary key, name text not null);
+-- drop table "user";
+-- create table "user" (id bigint primary key, name text not null, group_id bigint, point int not null);
