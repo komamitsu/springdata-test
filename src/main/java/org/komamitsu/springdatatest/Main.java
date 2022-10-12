@@ -3,7 +3,6 @@ package org.komamitsu.springdatatest;
 import org.komamitsu.springdatatest.domain.model.User;
 import org.komamitsu.springdatatest.domain.repository.GroupRepository;
 import org.komamitsu.springdatatest.domain.model.Group;
-import org.komamitsu.springdatatest.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,15 +19,11 @@ import java.util.List;
 
 @SpringBootApplication
 public class Main {
-
     @Autowired
     public JdbcTemplate template;
 
     @Autowired
     public GroupRepository groupRepo;
-    @Autowired
-    public UserRepository userRepo;
-
 
     @Bean
     public CommandLineRunner run() throws Exception {
@@ -37,7 +32,6 @@ public class Main {
 
         return (String[] args) -> {
             // Initialization
-            userRepo.deleteAll();
             groupRepo.deleteAll();
 
             List<Group> groups = Arrays.asList(
@@ -46,14 +40,13 @@ public class Main {
                     Group.create("group-3")
             );
             for (Group group : groups) {
-                Group savedGroup = groupRepo.save(group);
                 for (int i = 0; i < 5; i++) {
-                    String userName = String.format("user-%s-%d", group.getName(), i);
+                    String userName = String.format("user-%s-%d", group.name, i);
                     User savedUser = User.create(userName, 100 * i);
                     group.addUser(savedUser);
                 }
-                groupRepo.save(savedGroup);
             }
+            groupRepo.saveAll(groups);
             groupRepo.findAll().forEach(g -> System.out.println(g));
         };
     }

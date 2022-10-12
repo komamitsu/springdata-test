@@ -4,9 +4,9 @@ import org.springframework.data.annotation.Id;
 
 public class User {
     @Id
-    private final Long id;
-    private final String name;
-    private final Integer point;
+    public final Long id;
+    public final String name;
+    public final Integer point;
 
     public User(Long id, String name, Integer point) {
         this.id = id;
@@ -16,18 +16,6 @@ public class User {
 
     public static User create(String name, Integer point) {
         return new User(null, name, point);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getPoint() {
-        return point;
     }
 
     @Override
