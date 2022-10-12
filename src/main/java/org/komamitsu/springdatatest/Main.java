@@ -10,12 +10,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @SpringBootApplication
@@ -47,13 +49,20 @@ public class Main {
                     group.addUser(savedUser);
                 }
             }
-            groupRepo.saveAll(groups);
-            System.out.println("Calling findByName(group-2)");
+            Iterable<Group> savedGroups = groupRepo.saveAll(groups);
+
+            System.out.println("count(): " + groupRepo.count());
+
+            System.out.println("findByName(group-2):");
             Group secondGroup = groupRepo.findByName("group-2").get(0);
             System.out.println(secondGroup);
 
-            System.out.println("Calling findAll(Pageable.ofSize(2))");
-            groupRepo.findAll(Pageable.ofSize(2)).forEach(System.out::println);
+            System.out.println("findById(first id): " + groupRepo.findById(savedGroups.iterator().next().id));
+
+            groupRepo.save(secondGroup.withName("updated-" + secondGroup.name));
+
+            System.out.println("findAll(Sort.by(Sort.Order.desc(name))):");
+            groupRepo.findAll(Sort.by(Sort.Order.desc("name"))).forEach(System.out::println);
         };
     }
 

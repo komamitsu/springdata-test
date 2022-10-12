@@ -27,6 +27,10 @@ public class Group {
         return new Group(null, name, null);
     }
 
+    public Group withName(String name) {
+        return new Group(this.id, name, this.users);
+    }
+
     public void addUser(User user) {
         users.add(user);
     }
