@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.nio.file.Files;
@@ -47,7 +48,7 @@ public class Main {
                 }
             }
             groupRepo.saveAll(groups);
-            groupRepo.findAll().forEach(g -> System.out.println(g));
+            groupRepo.findAll(Pageable.ofSize(2)).forEach(g -> System.out.println(g));
         };
     }
 
