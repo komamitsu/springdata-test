@@ -1,2 +1,2 @@
-rootProject.name = "mitsu-springdata-test"
+rootProject.name = "springdata-test"
 
