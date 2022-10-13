@@ -8,16 +8,16 @@ import org.springframework.data.relational.core.sql.render.SelectRenderContext;
 public class ScalarDbDialect implements Dialect {
     @Override
     public LimitClause limit() {
-        return null;
+        throw new RuntimeException("Not supported");
     }
 
     @Override
     public LockClause lock() {
-        return null;
+        throw new RuntimeException("Not supported");
     }
 
     @Override
     public SelectRenderContext getSelectContext() {
-        return null;
+        throw new RuntimeException("Not supported");
     }
 }
