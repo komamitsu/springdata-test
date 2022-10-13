@@ -1,6 +1,5 @@
 package org.komamitsu.springdatatest;
 
-import org.komamitsu.springdatatest.domain.model.User;
 import org.komamitsu.springdatatest.domain.repository.GroupRepository;
 import org.komamitsu.springdatatest.domain.model.Group;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 
 
 @SpringBootApplication
@@ -26,28 +23,27 @@ public class Main {
     @Autowired
     public GroupRepository groupRepo;
 
+    enum DbType {
+        SCALARDB("scalardb"), PG("pg");
+
+        private String label;
+
+        DbType(String label) {
+            this.label = label;
+        }
+    }
+
     @Bean
     public CommandLineRunner run() throws Exception {
-        ClassPathResource resource = new ClassPathResource("schema-scalardb.sql");
+        // DbType dbType = DbType.SCALARDB;
+        DbType dbType = DbType.PG;
+        ClassPathResource resource = new ClassPathResource(String.format("schema-%s.sql", dbType.label));
         template.execute(Files.readString(Paths.get(resource.getURI())));
 
         return (String[] args) -> {
-            // Initialization
             groupRepo.deleteAll();
 
-            List<Group> groups = Arrays.asList(
-                    Group.create("group-1"),
-                    Group.create("group-2"),
-                    Group.create("group-3")
-            );
-            for (Group group : groups) {
-                for (int i = 0; i < 5; i++) {
-                    String userName = String.format("user-%s-%d", group.name, i);
-                    User savedUser = User.create(userName, 100 * i);
-                    group.addUser(savedUser);
-                }
-            }
-            Iterable<Group> savedGroups = groupRepo.saveAll(groups);
+            Iterable<Group> savedGroups = groupRepo.insertAll();
 
             System.out.println("count(): " + groupRepo.count());
 

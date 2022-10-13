@@ -1,4 +1,4 @@
-package org.komamitsu.springdatatest;
+package org.komamitsu.springdatatest.dialect;
 
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.data.relational.core.dialect.LimitClause;

@@ -1,4 +1,4 @@
-package org.komamitsu.springdatatest;
+package org.komamitsu.springdatatest.dialect;
 
 import org.springframework.data.jdbc.repository.config.DialectResolver;
 import org.springframework.data.relational.core.dialect.Dialect;
