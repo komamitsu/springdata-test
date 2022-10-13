@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 
 @SpringBootApplication
@@ -24,21 +25,29 @@ public class Main {
     public GroupRepository groupRepo;
 
     enum DbType {
-        SCALARDB("scalardb"), PG("pg");
+        SCALARDB("scalardb", true), PG("pg", false);
 
         private String label;
+        private boolean shouldSplitDDLs;
 
-        DbType(String label) {
+        DbType(String label, boolean shouldSplitDDLs) {
             this.label = label;
+            this.shouldSplitDDLs = shouldSplitDDLs;
         }
     }
 
     @Bean
     public CommandLineRunner run() throws Exception {
-        // DbType dbType = DbType.SCALARDB;
-        DbType dbType = DbType.PG;
+        DbType dbType = DbType.SCALARDB;
+//      DbType dbType = DbType.PG;
         ClassPathResource resource = new ClassPathResource(String.format("schema-%s.sql", dbType.label));
-        template.execute(Files.readString(Paths.get(resource.getURI())));
+        String ddls = Files.readString(Paths.get(resource.getURI()));
+        if (dbType.shouldSplitDDLs) {
+            Arrays.stream(ddls.split("\n")).forEach(ddl -> template.execute(ddl));
+        }
+        else {
+            template.execute(ddls);
+        }
 
         return (String[] args) -> {
             groupRepo.deleteAll();
