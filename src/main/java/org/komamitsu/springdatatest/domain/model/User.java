@@ -1,7 +1,9 @@
 package org.komamitsu.springdatatest.domain.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table(schema = "public", value = "user")
 public class User {
     @Id
     public final Long id;
