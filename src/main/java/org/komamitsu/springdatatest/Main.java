@@ -52,7 +52,8 @@ public class Main {
         return (String[] args) -> {
             groupRepo.deleteAll();
 
-            Iterable<Group> savedGroups = groupRepo.insertAll();
+            // Iterable<Group> savedGroups = groupRepo.insertAllToPg();
+            Iterable<Group> savedGroups = groupRepo.insertAllToScalarDb();
 
             System.out.println("count(): " + groupRepo.count());
 

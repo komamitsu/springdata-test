@@ -16,7 +16,7 @@ public class Group {
     @MappedCollection(idColumn = "group_id")
     public final Set<User> users;
 
-    private Group(Long id, String name, Set<User> users) {
+    public Group(Long id, String name, Set<User> users) {
         this.id = id;
         this.name = name;
         if (users == null) {
@@ -25,6 +25,11 @@ public class Group {
         this.users = users;
     }
 
+    public Group(long id, String name) {
+        this(id, name, null);
+    }
+
+    // This can be used only with PostgreSQL
     public static Group create(String name) {
         return new Group(null, name, null);
     }

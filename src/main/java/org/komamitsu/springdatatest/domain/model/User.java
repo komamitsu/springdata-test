@@ -16,6 +16,7 @@ public class User {
         this.point = point;
     }
 
+    // This can be used only with PostgreSQL
     public static User create(String name, Integer point) {
         return new User(null, name, point);
     }
