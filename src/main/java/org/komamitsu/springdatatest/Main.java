@@ -1,7 +1,7 @@
 package org.komamitsu.springdatatest;
 
-import org.komamitsu.springdatatest.domain.repository.GroupRepository;
 import org.komamitsu.springdatatest.domain.model.Group;
+import org.komamitsu.springdatatest.domain.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +25,11 @@ public class Main {
     public GroupRepository groupRepo;
 
     enum DbType {
-        SCALARDB("scalardb", true), PG("pg", false);
+        SCALARDB("scalardb", true),
+        PG("pg", false);
 
-        private String label;
-        private boolean shouldSplitDDLs;
+        private final String label;
+        private final boolean shouldSplitDDLs;
 
         DbType(String label, boolean shouldSplitDDLs) {
             this.label = label;
@@ -52,8 +53,12 @@ public class Main {
         return (String[] args) -> {
             groupRepo.deleteAll();
 
-            // Iterable<Group> savedGroups = groupRepo.insertAllToPg();
-            Iterable<Group> savedGroups = groupRepo.insertAllToScalarDb();
+            Iterable<Group> savedGroups;
+            switch (dbType) {
+                case SCALARDB -> savedGroups = groupRepo.insertAllToScalarDb();
+                case PG -> savedGroups = groupRepo.insertAllToPg();
+                default -> throw new IllegalStateException("Shouldn't reach here");
+            }
 
             System.out.println("count(): " + groupRepo.count());
 
