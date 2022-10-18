@@ -2,12 +2,14 @@ package org.komamitsu.springdatatest.domain.repository;
 
 import org.komamitsu.springdatatest.domain.model.Group;
 import org.komamitsu.springdatatest.domain.model.User;
+import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public interface GroupRepository extends PagingAndSortingRepository<Group, Long> {
@@ -15,35 +17,20 @@ public interface GroupRepository extends PagingAndSortingRepository<Group, Long>
     List<Group> findByName(String name);
 
     @Transactional
-    default Iterable<Group> insertAllToPg() {
+    default Iterable<Group> insertAll(JdbcAggregateTemplate jdbcAggregateTemplate) {
         List<Group> groups = Arrays.asList(
-                Group.create("group-1"),
-                Group.create("group-2"),
-                Group.create("group-3")
+                new Group(1L, "group-1", null),
+                new Group(2L, "group-2", null),
+                new Group(3L, "group-3", null)
         );
-        for (Group group : groups) {
+        AtomicLong userId = new AtomicLong(1);
+        return groups.stream().map(group -> {
             for (int i = 0; i < 5; i++) {
                 String userName = String.format("user-%s-%d", group.name, i);
-                User savedUser = User.create(userName, 100 * i);
+                User savedUser = new User(userId.getAndIncrement(), userName, 100 * i);
                 group.addUser(savedUser);
             }
-        }
-        return saveAll(groups);
-    }
-    @Transactional
-    default Iterable<Group> insertAllToScalarDb() {
-        List<Group> groups = Arrays.asList(
-                new Group(0, "group-1"),
-                new Group(1, "group-2"),
-                new Group(2, "group-3")
-        );
-        for (Group group : groups) {
-            for (int i = 0; i < 5; i++) {
-                String userName = String.format("user-%s-%d", group.name, i);
-                User savedUser = new User((long) i, userName, 100 * i);
-                group.addUser(savedUser);
-            }
-        }
-        return saveAll(groups);
+            return jdbcAggregateTemplate.insert(group);
+        }).toList();
     }
 }

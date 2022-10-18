@@ -13,6 +13,7 @@ public class Group {
     @Id
     public final Long id;
     public final String name;
+
     @MappedCollection(idColumn = "group_id")
     public final Set<User> users;
 
@@ -23,15 +24,6 @@ public class Group {
             users = new HashSet<>();
         }
         this.users = users;
-    }
-
-    public Group(long id, String name) {
-        this(id, name, null);
-    }
-
-    // This can be used only with PostgreSQL
-    public static Group create(String name) {
-        return new Group(null, name, null);
     }
 
     public Group withName(String name) {

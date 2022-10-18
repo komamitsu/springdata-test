@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.nio.file.Files;
@@ -20,6 +21,8 @@ import java.util.Arrays;
 public class Main {
     @Autowired
     public JdbcTemplate template;
+    @Autowired
+    public JdbcAggregateTemplate aggregateTemplate;
 
     @Autowired
     public GroupRepository groupRepo;
@@ -40,7 +43,7 @@ public class Main {
     @Bean
     public CommandLineRunner run() throws Exception {
         DbType dbType = DbType.SCALARDB;
-//      DbType dbType = DbType.PG;
+        // DbType dbType = DbType.PG;
         ClassPathResource resource = new ClassPathResource(String.format("schema-%s.sql", dbType.label));
         String ddls = Files.readString(Paths.get(resource.getURI()));
         if (dbType.shouldSplitDDLs) {
@@ -53,12 +56,7 @@ public class Main {
         return (String[] args) -> {
             groupRepo.deleteAll();
 
-            Iterable<Group> savedGroups;
-            switch (dbType) {
-                case SCALARDB -> savedGroups = groupRepo.insertAllToScalarDb();
-                case PG -> savedGroups = groupRepo.insertAllToPg();
-                default -> throw new IllegalStateException("Shouldn't reach here");
-            }
+            Iterable<Group> savedGroups = groupRepo.insertAll(aggregateTemplate);
 
             System.out.println("count(): " + groupRepo.count());
 
