@@ -59,12 +59,14 @@ public class Main {
         }
 
         return (String[] args) -> {
+            // ScalarDbJdbcAggregateTemplate doesn't allow `deleteAll()` for now
 //            groupRepo.deleteAll();
             aggregateTemplate.deleteById(1, Group.class);
             aggregateTemplate.deleteById(2, Group.class);
             aggregateTemplate.deleteById(3, Group.class);
 
-//            Iterable<Group> savedGroups = groupRepo.insertAll(aggregateTemplate);
+            Iterable<Group> savedGroups = groupRepo.insertAll(aggregateTemplate);
+            /*
             List<Group> savedGroups = new ArrayList<>();
             {
                 List<Group> groups = Arrays.asList(
@@ -82,26 +84,27 @@ public class Main {
                     return aggregateTemplate.insert(group);
                 }).toList();
             }
+             */
 
-//            System.out.println("count(): " + groupRepo.count());
-            System.out.println("count(): " + aggregateTemplate.count(Group.class));
+            System.out.println("count(): " + groupRepo.count());
+//            System.out.println("count(): " + aggregateTemplate.count(Group.class));
 
             System.out.println("findByName(group-2):");
-//            Group secondGroup = groupRepo.findByName("group-2").get(0);
+            Group secondGroup = groupRepo.findByName("group-2").get(0);
 //            Group secondGroup = aggregateTemplate.findByName("group-2").get(0);
-            // FIXME
-            Group secondGroup = aggregateTemplate.findById(2L, Group.class);
+// FIXME
+//            Group secondGroup = aggregateTemplate.findById(2L, Group.class);
             System.out.println(secondGroup);
 
-//            System.out.println("findById(first id): " + groupRepo.findById(savedGroups.iterator().next().id));
-            System.out.println("findById(first id): " + aggregateTemplate.findById(savedGroups.iterator().next().id, Group.class));
+            System.out.println("findById(first id): " + groupRepo.findById(savedGroups.iterator().next().id));
+//            System.out.println("findById(first id): " + aggregateTemplate.findById(savedGroups.iterator().next().id, Group.class));
 
-//            groupRepo.save(secondGroup.withName("updated-" + secondGroup.name));
-            aggregateTemplate.save(secondGroup.withName("updated-" + secondGroup.name));
+            groupRepo.save(secondGroup.withName("updated-" + secondGroup.name));
+//            aggregateTemplate.save(secondGroup.withName("updated-" + secondGroup.name));
 
             System.out.println("findAll(Sort.by(Sort.Order.desc(name))):");
-//            groupRepo.findAll(Sort.by(Sort.Order.desc("name"))).forEach(System.out::println);
-            aggregateTemplate.findAll(Group.class, Sort.by(Sort.Order.desc("name"))).forEach(System.out::println);
+            groupRepo.findAll(Sort.by(Sort.Order.desc("name"))).forEach(System.out::println);
+//            aggregateTemplate.findAll(Group.class, Sort.by(Sort.Order.desc("name"))).forEach(System.out::println);
         };
     }
 

@@ -51,25 +51,31 @@ class ScalarDbJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID exten
     @Autowired
     public void setDialect(Dialect dialect) {
         Assert.notNull(dialect, "Dialect must not be null");
+        super.setDialect(dialect);
         this.dialect = dialect;
     }
 
     /**
      * @param dataAccessStrategy can be {@literal null}.
      */
+    @Autowired
     public void setDataAccessStrategy(DataAccessStrategy dataAccessStrategy) {
         Assert.notNull(dataAccessStrategy, "DataAccessStrategy must not be null");
+        super.setDataAccessStrategy(dataAccessStrategy);
         this.dataAccessStrategy = dataAccessStrategy;
     }
 
+    @Autowired
     public void setJdbcOperations(NamedParameterJdbcOperations operations) {
         Assert.notNull(operations, "NamedParameterJdbcOperations must not be null");
+        super.setJdbcOperations(operations);
         this.operations = operations;
     }
 
     @Autowired
     public void setConverter(JdbcConverter converter) {
         Assert.notNull(converter, "JdbcConverter must not be null");
+        super.setConverter(converter);
         this.converter = converter;
     }
 }

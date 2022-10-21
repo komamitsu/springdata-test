@@ -18,8 +18,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
 @Configuration
 // TODO: WIP
-// @EnableJdbcRepositories(repositoryFactoryBeanClass = ScalarDbJdbcRepositoryFactoryBean.class)
-@EnableJdbcRepositories
+ @EnableJdbcRepositories(repositoryFactoryBeanClass = ScalarDbJdbcRepositoryFactoryBean.class)
+//@EnableJdbcRepositories
 public class ScalarDbJdbcConfiguration extends AbstractJdbcConfiguration {
     /*
     @Bean

@@ -1,11 +1,13 @@
 package org.komamitsu.springdatatest;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory;
+import org.springframework.data.mapping.callback.EntityCallbacks;
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
@@ -17,6 +19,7 @@ public class ScalarDbJdbcRepositoryFactory extends JdbcRepositoryFactory {
     private final RelationalMappingContext context;
     private final JdbcConverter converter;
     private final DataAccessStrategy accessStrategy;
+    private EntityCallbacks entityCallbacks;
 
     /**
      * Creates a new {@link JdbcRepositoryFactory} for the given {@link DataAccessStrategy},
@@ -42,16 +45,20 @@ public class ScalarDbJdbcRepositoryFactory extends JdbcRepositoryFactory {
 
         JdbcAggregateTemplate template = new ScalarDbJdbcAggregateTemplate(publisher, context, converter, accessStrategy);
 
-        /* FIXME
         if (entityCallbacks != null) {
             template.setEntityCallbacks(entityCallbacks);
         }
-         */
 
         RelationalPersistentEntity<?> persistentEntity = context
                 .getRequiredPersistentEntity(repositoryInformation.getDomainType());
 
         return getTargetRepositoryViaReflection(repositoryInformation, template, persistentEntity,
                 converter);
+    }
+
+    @Override
+    public void setEntityCallbacks(EntityCallbacks entityCallbacks) {
+        this.entityCallbacks = entityCallbacks;
+        super.setEntityCallbacks(entityCallbacks);
     }
 }
