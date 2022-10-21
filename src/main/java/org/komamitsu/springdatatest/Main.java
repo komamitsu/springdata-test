@@ -42,8 +42,8 @@ public class Main {
 
     @Bean
     public CommandLineRunner run() throws Exception {
-        DbType dbType = DbType.SCALARDB;
-        // DbType dbType = DbType.PG;
+//        DbType dbType = DbType.SCALARDB;
+         DbType dbType = DbType.PG;
         ClassPathResource resource = new ClassPathResource(String.format("schema-%s.sql", dbType.label));
         String ddls = Files.readString(Paths.get(resource.getURI()));
         if (dbType.shouldSplitDDLs) {
@@ -66,7 +66,8 @@ public class Main {
 
             System.out.println("findById(first id): " + groupRepo.findById(savedGroups.iterator().next().id));
 
-            groupRepo.save(secondGroup.withName("updated-" + secondGroup.name));
+//            groupRepo.save(secondGroup.withName("updated-" + secondGroup.name));
+            aggregateTemplate.save(secondGroup.withName("updated-" + secondGroup.name));
 
             System.out.println("findAll(Sort.by(Sort.Order.desc(name))):");
             groupRepo.findAll(Sort.by(Sort.Order.desc("name"))).forEach(System.out::println);

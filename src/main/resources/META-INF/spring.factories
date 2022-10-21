@@ -1,1 +1,2 @@
-org.springframework.data.jdbc.repository.config.DialectResolver$JdbcDialectProvider=org.komamitsu.springdatatest.dialect.ScalarDbDialectProvider
+# org.springframework.data.jdbc.repository.config.DialectResolver$JdbcDialectProvider=org.komamitsu.springdatatest.dialect.ScalarDbDialectProvider
+org.springframework.data.jdbc.core.JdbcAggregateTemplate=org.springframework.data.jdbc.core.JdbcAggregateTemplate
